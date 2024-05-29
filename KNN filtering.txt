@@ -1,0 +1,49 @@
+#Step 1: Import Liabary
+
+import pandas as pd
+import numpy as np
+from sklearn.model_selection import train_test_split
+from sklearn.preprocessing import StandardScaler
+from sklearn.neighbors import KNeighborsClassifier
+from sklearn.metrics import classification_report, confusion_matrix, accuracy_score
+import matplotlib.pyplot as plt
+import seaborn as sns
+
+print("Libraries uploaded")
+
+#Step 2: Load Dataset
+train_data_path=r'C:\\Users\\user\\Desktop\\Train data filtering.xlsx'
+test_data_path=r'C:\\Users\\user\\Desktop\\Test data filtering.xlsx'
+dftrain = pd.read_excel(train_data_path)
+dftest = pd.read_excel(test_data_path)
+
+print("data load")
+
+
+# Step 3: Preprocess the data if needed
+print("No preprocessing needed because alreeady we drop two features")
+
+#Step 4+5: Split the dataset into features (X) and target variable (y) and define test and train data.
+#Note we already split data set into train and test data split
+
+X_train = dftrain.drop(columns=['fetal_health'])  #Features
+Y_train = dftrain['fetal_health']  #Target variable
+X_test=dftest.drop(columns=['fetal_health'])  #Features
+Y_test=dftest['fetal_health']  #Target variable
+print("target vaule + define train and test data")
+
+
+
+# Step 6: Apply Machine Learning Algorithm (KNN)
+knn = KNeighborsClassifier(n_neighbors=3)
+knn.fit(X_train, Y_train)
+y_pred = knn.predict(X_test)
+print("Applying KNN Algprthims")
+
+
+# Step 7: Evaluate the model
+print("Accuracy:", accuracy_score(Y_test, y_pred))
+print("\nClassification Report:\n", classification_report(Y_test, y_pred))
+
+
+
