@@ -1,0 +1,52 @@
+import pandas as pd
+from sklearn.model_selection import train_test_split
+from sklearn.preprocessing import StandardScaler
+from sklearn.tree import DecisionTreeClassifier
+from sklearn.metrics import classification_report, accuracy_score
+import matplotlib.pyplot as plt
+
+# Load the datasets
+test_data = pd.read_excel('C:/Users/Asus/Desktop/rama/test data filtering.xlsx')
+train_test_split_data = pd.read_excel('C:/Users/Asus/Desktop/rama/Train and test data split filtering.xlsx')
+train_data = pd.read_excel('C:/Users/Asus/Desktop/rama/Train data filtering.xlsx')
+
+
+# Combine datasets
+combined_data = pd.concat([train_data, test_data])
+
+# Define features and target variable
+features = combined_data.drop(['Row', 'fetal_health', 'Sort'], axis=1)
+target = combined_data['fetal_health']
+
+# Split the combined data into training and testing sets
+X_train, X_test, y_train, y_test = train_test_split(features, target, test_size=0.2, random_state=42)
+
+# Standardize the features
+scaler = StandardScaler()
+X_train_scaled = scaler.fit_transform(X_train)
+X_test_scaled = scaler.transform(X_test)
+
+# Decision Tree
+decision_tree = DecisionTreeClassifier(random_state=42)
+decision_tree.fit(X_train_scaled, y_train)
+y_pred_decision_tree = decision_tree.predict(X_test_scaled)
+
+# Evaluate the model
+decision_tree_accuracy = accuracy_score(y_test, y_pred_decision_tree)
+decision_tree_report = classification_report(y_test, y_pred_decision_tree)
+
+print(f"Decision Tree Accuracy: {decision_tree_accuracy}")
+print("Decision Tree Classification Report:")
+print(decision_tree_report)
+
+# Plotting the accuracy score
+models = ['Decision Tree']
+accuracies = [decision_tree_accuracy]
+
+plt.figure(figsize=(10, 6))
+plt.bar(models, accuracies, color=['green'])
+plt.ylim(0, 1)
+plt.xlabel('Model')
+plt.ylabel('Accuracy')
+plt.title('Accuracy of Decision Tree Model')
+plt.show()
